@@ -1,14 +1,9 @@
-import leaflet from 'leaflet';
 import leafletImage from 'leaflet-image';
 import 'leaflet-providers';
-import 'leaflet-easybutton';
-import 'leaflet-ruler';
-import 'leaflet-ruler/src/leaflet-ruler.css';
 import * as ui from './ui';
 import proj4 from 'proj4';
 
 
-const L = leaflet;
 const UTM_ZONE = "+proj=utm +zone=31 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
 const INIT_COORDS = [51.55802, 4.93596];
 // const GRID_ANCHOR_START = L.latLng(51.55802, 4.93596); // startveld

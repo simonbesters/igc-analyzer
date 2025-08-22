@@ -83,5 +83,11 @@ module.exports = (env, argv) => {
 
     // optioneel, om de volledige foutdetails te zien in je terminal:
      stats: { errorDetails: true },
+
+     externals: {
+      leaflet: 'L',   // 👉 vertelt webpack dat Leaflet via <script> komt
+       'leaflet-easybutton': 'L.easyButton',
+  'leaflet-ruler': 'L.control.ruler'
+    }
   };
 };
