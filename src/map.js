@@ -89,57 +89,60 @@ export default class GpxMap {
         }).addTo(this.map);
 
         L.easyButton({
-            type: 'animate',
-            states: [{
-                icon: 'fa-camera fa-lg',
-                stateName: 'default',
-                title: 'Export as png',
-                onClick: () => {
-                    let modal = ui.showModal('exportImage')
-                        .afterClose(() => modal.destroy());
+    type: 'animate',
+    states: [{
+        icon: 'fa-camera fa-lg',
+        stateName: 'default',
+        title: 'Export as png',
+        onClick: () => {
+            const modal = ui.showModal('exportImage');
+            modal.afterClose(() => modal.destroy());
+            modal.show();
 
-                    document.getElementById('render-export').onclick = (e) => {
-                        e.preventDefault();
+document.getElementById('render-export')
+    .addEventListener('click', (e) => {
+        e.preventDefault();
+        let output = document.getElementById('export-output');
+        output.innerHTML = 'Rendering <i class="fa fa-cog fa-spin"></i>';
 
-                        let output = document.getElementById('export-output');
-                        output.innerHTML = 'Rendering <i class="fa fa-cog fa-spin"></i>';
-
-                        let form = document.getElementById('export-settings').elements;
-                        this.screenshot(form.format.value, output);
-                    };
-                }
-            }]
-        }).addTo(this.map);
-
-        L.easyButton({
-            type: 'animate',
-            states: [{
-                icon: 'fa-sliders fa-lg',
-                stateName: 'default',
-                title: 'Open settings dialog',
-                onClick: () => {
-                    ui.buildSettingsModal(this.tracks, this.options, (opts) => {
-                        this.updateOptions(opts);
-                        this.saveOptions(opts);
-                    }).show();
-                },
-            }],
-        }).addTo(this.map);
+        let form = document.getElementById('export-settings').elements;
+        this.screenshot(form.format.value, output);
+    }, { once: true });
+        }
+    }]
+}).addTo(this.map);
 
         L.easyButton({
-            type: 'animate',
-            states: [{
-                icon: 'fa-filter fa-lg',
-                stateName: 'default',
-                title: 'Filter displayed tracks',
-                onClick: () => {
-                    ui.buildFilterModal(this.tracks, this.filters, (f) => {
-                        this.filters = f;
-                        this.applyFilters();
-                    }).show();
-                }
-            }]
-        }).addTo(this.map);
+    type: 'animate',
+    states: [{
+        icon: 'fa-sliders fa-lg',
+        stateName: 'default',
+        title: 'Open settings dialog',
+        onClick: () => {
+            const modal = ui.buildSettingsModal(this.tracks, this.options, (opts) => {
+                this.updateOptions(opts);
+                this.saveOptions(opts);
+            });
+            modal.show();
+        },
+    }],
+}).addTo(this.map);
+
+       L.easyButton({
+    type: 'animate',
+    states: [{
+        icon: 'fa-filter fa-lg',
+        stateName: 'default',
+        title: 'Filter displayed tracks',
+        onClick: () => {
+            const modal = ui.buildFilterModal(this.tracks, this.filters, (f) => {
+                this.filters = f;
+                this.applyFilters();
+            });
+            modal.show();
+        }
+    }]
+}).addTo(this.map);
 
 
         L.easyButton('fa-th fa-lg', () => {

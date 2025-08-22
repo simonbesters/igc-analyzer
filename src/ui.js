@@ -153,12 +153,195 @@ function buildUploadModal(numFiles) {
 
 // --- settings modal (nog steeds nodig) ---
 export function buildSettingsModal(tracks, opts, updateCallback) {
-    // ... (blijft ongewijzigd)
+    let overrideExisting = opts.lineOptions.overrideExisting ? 'checked' : '';
+
+    if (tracks.length > 0) {
+        let allSameColor = tracks.every(({line}) => {
+            return line.options.color === tracks[0].line.options.color;
+        });
+
+        if (!allSameColor) {
+            overrideExisting = false;
+        } else {
+            opts.lineOptions.color = tracks[0].line.options.color;
+        }
+    }
+
+    let detect = opts.lineOptions.detectColors ? 'checked' : '';
+    let themes = AVAILABLE_THEMES.map(t => {
+        let selected = (t === opts.theme) ? 'selected' : '';
+        return `<option ${selected} value="${t}">${t}</option>`;
+    });
+
+    let modalContent = `
+<h3>Options</h3>
+
+<form id="settings">
+    <span class="form-row">
+        <label>Theme</label>
+        <select name="theme">
+            ${themes}
+        </select>
+    </span>
+
+    <fieldset class="form-group">
+        <legend>GPS Track Options</legend>
+
+        <div class="row">
+            <label>Color</label>
+            <input name="color" type="color" value=${opts.lineOptions.color}>
+        </div>
+
+        <div class="row">
+            <label>Opacity</label>
+            <input name="opacity" type="range" min=0 max=1 step=0.01
+                value=${opts.lineOptions.opacity}>
+        </div>
+
+        <div class="row">
+            <label>Width</label>
+            <input name="weight" type="number" min=1 max=100
+                value=${opts.lineOptions.weight}>
+        </div>
+
+    </fieldset>
+
+    <fieldset class="form-group">
+        <legend>Image Marker Options</legend>
+
+        <div class="row">
+            <label>Color</label>
+            <input name="markerColor" type="color" value=${opts.markerOptions.color}>
+        </div>
+
+        <div class="row">
+            <label>Opacity</label>
+            <input name="markerOpacity" type="range" min=0 max=1 step=0.01
+                value=${opts.markerOptions.opacity}>
+        </div>
+
+        <div class="row">
+            <label>Width</label>
+            <input name="markerWeight" type="number" min=1 max=100
+                value=${opts.markerOptions.weight}>
+        </div>
+
+        <div class="row">
+            <label>Radius</label>
+            <input name="markerRadius" type="number" min=1 max=100
+                value=${opts.markerOptions.radius}>
+        </div>
+
+    </fieldset>
+
+    <span class="form-row">
+        <label>Override existing tracks</label>
+        <input name="overrideExisting" type="checkbox" ${overrideExisting}>
+    </span>
+
+    <span class="form-row">
+        <label>Detect color from Strava bulk export</label>
+        <input name="detectColors" type="checkbox" ${detect}>
+    </span>
+</form>`;
+
+    let modal = picoModal({
+        content: modalContent,
+        closeButton: true,
+        escCloses: true,
+        overlayClose: true,
+        overlayStyles: (styles) => {
+            styles.opacity = 0.1;
+        },
+    });
+
+    let applyOptions = () => {
+        let elements = document.getElementById('settings').elements;
+        let options = Object.assign({}, opts);
+
+        for (let opt of ['theme']) {
+            options[opt] = elements[opt].value;
+        }
+
+        for (let opt of ['color', 'weight', 'opacity']) {
+            options.lineOptions[opt] = elements[opt].value;
+        }
+
+        for (let opt of ['markerColor', 'markerWeight', 'markerOpacity', 'markerRadius']) {
+            let optionName = opt.replace('marker', '').toLowerCase();
+            options.markerOptions[optionName] = elements[opt].value;
+        }
+
+        for (let opt of ['overrideExisting', 'detectColors']) {
+            options.lineOptions[opt] = elements[opt].checked;
+        }
+
+        updateCallback(options);
+    };
+
+    modal.afterClose((modal) => {
+      applyOptions();
+      modal.destroy();
+    });
+
+    modal.afterCreate(() => {
+      let elements = document.getElementById('settings').elements;
+      for (let opt of ['theme', 'color', 'weight', 'opacity', 'markerColor',
+                       'markerWeight', 'markerOpacity', 'markerRadius']) {
+        elements[opt].addEventListener('change', applyOptions);
+      }
+    });
+
+
+    return modal;
 }
 
-// --- filter modal (blijft ook ongewijzigd) ---
 export function buildFilterModal(tracks, filters, finishCallback) {
-    // ... (blijft ongewijzigd)
+    let maxDate = new Date().toISOString().split('T')[0];
+    let modalContent = `
+<h3>Filter Displayed Tracks</h3>
+
+<form id="settings">
+    <span class="form-row">
+        <label for="minDate">Start date:</label>
+        <input type="date" id="minDate" name="minDate"
+            value="${filters.minDate || ''}"
+            min="1990-01-01"
+            max="${maxDate}">
+    </span>
+
+    <span class="form-row">
+        <label for="maxDate">End date:</label>
+        <input type="date" id="maxDate" name="maxDate"
+            value="${filters.maxDate || ''}"
+            min="1990-01-01"
+            max="${maxDate}">
+    </span>
+</form>`;
+
+    let modal = picoModal({
+        content: modalContent,
+        closeButton: true,
+        escCloses: true,
+        overlayClose: true,
+        overlayStyles: (styles) => {
+            styles.opacity = 0.1;
+        },
+    });
+
+    modal.afterClose((modal) => {
+        let elements = document.getElementById('settings').elements;
+        let filters = Object.assign({}, filters);
+
+        for (let key of ['minDate', 'maxDate']) {
+            filters[key] = elements[key].value;
+        }
+
+        finishCallback(filters);
+        modal.destroy();
+    });
+
+    return modal;
 }
 
 // --- andere modals zoals export ---
