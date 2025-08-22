@@ -1,0 +1,71 @@
+{
+  "name": "igc-analyzer",
+  "version": "0.0.0",
+  "main": "src/app.js",
+  "repository": {
+    "url": "git@github.com:simonbesters/igc-analyzer.git",
+    "type": "git"
+  },
+  "scripts": {
+    "serve": "webpack serve --mode development",
+    "build": "webpack --mode production",
+    "lint": "eslint \"src/**/*.js\""
+  },
+  "author": "simon besters <simon@beste.rs>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "browserslist": {
+    "production": [
+      "last 2 Chrome versions",
+      "last 2 Firefox versions",
+      "last 2 Safari versions",
+      "last 2 Edge versions",
+      "not dead"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "dependencies": {
+    "exif-js": "^2.3.0",
+    "fit-file-parser": "^1.21.0",
+    "igc-parser": "^2.0.0",
+    "leaflet": "^1.9.4",
+    "leaflet-easybutton": "^2.4.0",
+    "leaflet-image": "^0.4.0",
+    "leaflet-measure": "^3.1.0",
+    "leaflet-providers": "^2.0.0",
+    "leaflet-ruler": "^1.0.0",
+    "pako": "^2.1.0",
+    "picomodal": "^3.0.0",
+    "proj4": "^2.19.10",
+    "skiz-parser": "^6.0.0",
+    "xml2js": "^0.6.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.3",
+    "@babel/preset-env": "^7.28.3",
+    "assert": "^2.1.0",
+    "babel-loader": "^10.0.0",
+    "browserify-zlib": "^0.2.0",
+    "buffer": "^6.0.3",
+    "core-js": "^3.45.1",
+    "crypto-browserify": "^3.12.1",
+    "css-loader": "^7.1.2",
+    "eslint": "^9.33.0",
+    "events": "^3.3.0",
+    "process": "^0.11.10",
+    "regenerator-runtime": "^0.14.1",
+    "stream-browserify": "^3.0.0",
+    "style-loader": "^4.0.0",
+    "timers-browserify": "^2.0.12",
+    "util": "^0.12.5",
+    "webpack": "^5.101.3",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
+  }
+}
