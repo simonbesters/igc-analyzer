@@ -36,3 +36,11 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 bundle.js
+
+# macOS / Windows junk
+.DS_Store
+Thumbs.db
+
+# Editor directories
+.vscode/
+.idea/
